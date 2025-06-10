@@ -1,4 +1,4 @@
-const API_BASE = 'http://localhost:3001';
+const API_BASE = 'https://json-server-1-suy9.onrender.com/';
 
 class ApiService {
   async request(endpoint, options = {}) {

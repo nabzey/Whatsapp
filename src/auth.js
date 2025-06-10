@@ -1,5 +1,4 @@
 import apiService from './api.js';
-
 class AuthManager {
   constructor() {
     this.currentUser = null;

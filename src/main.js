@@ -65,7 +65,7 @@ class WhatsAppClone {
 
     // Chat icon
     const chatIcon = document.createElement('button');
-    chatIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'chats' ? 'bg-[#00a884] text-white' : 'text-[#8696a0] hover:bg-[#3b4a54]'}`;
+    chatIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'chats' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
     chatIcon.innerHTML = '<i class="fas fa-comment-alt text-xl"></i>';
     chatIcon.title = 'Discussions';
     chatIcon.addEventListener('click', () => {
@@ -76,7 +76,7 @@ class WhatsAppClone {
 
     // Status icon
     const statusIcon = document.createElement('button');
-    statusIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'status' ? 'bg-[#00a884] text-white' : 'text-[#8696a0] hover:bg-[#3b4a54]'}`;
+    statusIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'status' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
     statusIcon.innerHTML = '<i class="fas fa-circle-notch text-xl"></i>';
     statusIcon.title = 'Statuts';
     statusIcon.addEventListener('click', () => {
@@ -87,7 +87,7 @@ class WhatsAppClone {
 
     // Channels icon
     const channelsIcon = document.createElement('button');
-    channelsIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'channels' ? 'bg-[#00a884] text-white' : 'text-[#8696a0] hover:bg-[#3b4a54]'}`;
+    channelsIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'channels' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
     channelsIcon.innerHTML = '<i class="fas fa-bullhorn text-xl"></i>';
     channelsIcon.title = 'Chaînes';
     channelsIcon.addEventListener('click', () => {
@@ -98,7 +98,7 @@ class WhatsAppClone {
 
     // Communities icon
     const communitiesIcon = document.createElement('button');
-    communitiesIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'communities' ? 'bg-[#00a884] text-white' : 'text-[#8696a0] hover:bg-[#3b4a54]'}`;
+    communitiesIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'communities' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
     communitiesIcon.innerHTML = '<i class="fas fa-users text-xl"></i>';
     communitiesIcon.title = 'Communautés';
     communitiesIcon.addEventListener('click', () => {
@@ -167,7 +167,7 @@ class WhatsAppClone {
 
   createDiscussionsPanel() {
     const panel = document.createElement('div');
-    panel.className = 'w-[400px] bg-[#111b21] h-screen flex flex-col border-r border-[#3b4a54]';
+    panel.className = 'w-[400px] bg-[#0a1733] h-screen flex flex-col border-r border-[#3b4a54]';
 
     // Header
     const header = document.createElement('div');
@@ -238,8 +238,8 @@ class WhatsAppClone {
         const tab = document.createElement('button');
         tab.className = `px-3 py-1 rounded-full text-sm transition-colors ${
           index === 0 
-            ? 'bg-[#00a884] text-white' 
-            : 'bg-[#202c33] text-[#8696a0] hover:bg-[#3b4a54]'
+            ? 'bg-[#0a1733] text-white' 
+            : 'bg-[#202c33] text-[#8696a0] hover:bg-[#1d4ed8]'
         }`;
         tab.textContent = filter;
         filterTabs.appendChild(tab);
@@ -262,7 +262,7 @@ class WhatsAppClone {
       archivedLeft.className = 'flex items-center gap-3';
 
       const archiveIcon = document.createElement('div');
-      archiveIcon.className = 'w-10 h-10 bg-[#00a884] rounded-full flex items-center justify-center';
+      archiveIcon.className = 'w-10 h-10 bg-[#0a1733] rounded-full flex items-center justify-center';
       archiveIcon.innerHTML = '<i class="fas fa-archive text-white"></i>';
 
       const archivedText = document.createElement('span');
@@ -270,7 +270,7 @@ class WhatsAppClone {
       archivedText.textContent = 'Archivées';
 
       const archivedCount = document.createElement('span');
-      archivedCount.className = 'bg-[#00a884] text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center';
+      archivedCount.className = 'bg-[#0a1733] text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center';
       archivedCount.textContent = '1';
 
       archivedLeft.appendChild(archiveIcon);
@@ -746,16 +746,16 @@ class WhatsAppClone {
 
   createMainContent() {
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex-1 bg-[#0b141a] h-screen flex flex-col items-center justify-center relative';
+    mainContent.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col items-center justify-center relative';
 
     if (this.currentChat) {
       // Show chat view with proper styling
       const chatView = chatManager.createChatView(this.currentChat);
-      mainContent.className = 'flex-1 bg-[#0b141a] h-screen flex flex-col';
+      mainContent.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col';
       mainContent.innerHTML = '';
       
       // Apply WhatsApp Web chat styling
-      chatView.className = 'flex-1 bg-[#0b141a] h-screen flex flex-col';
+      chatView.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col';
       mainContent.appendChild(chatView);
     } else {
       // Show welcome screen
@@ -826,7 +826,7 @@ class WhatsAppClone {
     this.app.innerHTML = '';
     
     const container = document.createElement('div');
-    container.className = 'flex h-screen w-full bg-[#111b21]';
+    container.className = 'flex h-screen w-full bg-[#0a1733]';
 
     // Left sidebar with icons
     const leftSidebar = this.createLeftSidebar();
