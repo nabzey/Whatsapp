@@ -1,20 +1,20 @@
-const API_BASE = 'https://json-server-1-suy9.onrender.com/';
+const API_URL = 'https://json-server-1-suy9.onrender.com/';
 
 class ApiService {
   async request(endpoint, options = {}) {
     try {
-      const response = await fetch(`${API_BASE}${endpoint}`, {
+      const response = await fetch(`${API_URL}${endpoint}`, {
         headers: {
           'Content-Type': 'application/json',
           ...options.headers
         },
         ...options
       });
-      
+
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
-      
+
       return await response.json();
     } catch (error) {
       console.error('API request failed:', error);
@@ -24,15 +24,15 @@ class ApiService {
 
   // Users
   async getUsers() {
-    return this.request('/users');
+    return this.request('users');
   }
 
   async getUser(id) {
-    return this.request(`/users/${id}`);
+    return this.request(`users/${id}`);
   }
 
   async updateUser(id, data) {
-    return this.request(`/users/${id}`, {
+    return this.request(`users/${id}`, {
       method: 'PATCH',
       body: JSON.stringify(data)
     });
@@ -42,12 +42,12 @@ class ApiService {
   async login(username, password) {
     const users = await this.getUsers();
     const user = users.find(u => u.username === username);
-    
+
     if (user) {
       localStorage.setItem('currentUser', JSON.stringify(user));
       return user;
     }
-    
+
     throw new Error('Invalid credentials');
   }
 
@@ -62,16 +62,16 @@ class ApiService {
 
   // Chats
   async getChats() {
-    return this.request('/chats');
+    return this.request('chats');
   }
 
   async getChat(id) {
-    return this.request(`/chats/${id}`);
+    return this.request(`chats/${id}`);
   }
 
   // Messages
   async getMessages(chatId) {
-    return this.request(`/messages?chatId=${chatId}&_sort=timestamp&_order=asc`);
+    return this.request(`messages?chatId=${chatId}&_sort=timestamp&_order=asc`);
   }
 
   async sendMessage(message) {
@@ -81,8 +81,8 @@ class ApiService {
       timestamp: new Date().toISOString(),
       status: 'sent'
     };
-    
-    return this.request('/messages', {
+
+    return this.request('messages', {
       method: 'POST',
       body: JSON.stringify(newMessage)
     });
@@ -90,7 +90,7 @@ class ApiService {
 
   // Stories
   async getStories() {
-    return this.request('/stories?_sort=timestamp&_order=desc');
+    return this.request('stories?_sort=timestamp&_order=desc');
   }
 
   async createStory(story) {
@@ -100,18 +100,18 @@ class ApiService {
       timestamp: new Date().toISOString(),
       views: []
     };
-    
-    return this.request('/stories', {
+
+    return this.request('stories', {
       method: 'POST',
       body: JSON.stringify(newStory)
     });
   }
 
   async viewStory(storyId, userId) {
-    const story = await this.request(`/stories/${storyId}`);
+    const story = await this.request(`stories/${storyId}`);
     if (!story.views.includes(userId)) {
       story.views.push(userId);
-      return this.request(`/stories/${storyId}`, {
+      return this.request(`stories/${storyId}`, {
         method: 'PUT',
         body: JSON.stringify(story)
       });
@@ -121,7 +121,7 @@ class ApiService {
 
   // Calls
   async getCalls() {
-    return this.request('/calls?_sort=timestamp&_order=desc');
+    return this.request('calls?_sort=timestamp&_order=desc');
   }
 
   async createCall(call) {
@@ -130,8 +130,8 @@ class ApiService {
       id: Date.now(),
       timestamp: new Date().toISOString()
     };
-    
-    return this.request('/calls', {
+
+    return this.request('calls', {
       method: 'POST',
       body: JSON.stringify(newCall)
     });

@@ -5,6 +5,7 @@ import chatManager from './chat.js';
 import statusManager from './status.js';
 import callsManager from './calls.js';
 
+
 class WhatsAppClone {
   constructor() {
     this.app = document.getElementById('app');
