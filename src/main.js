@@ -136,7 +136,7 @@ class WhatsAppClone {
     
   const avatarImg = document.createElement('img');
 // Toujours utiliser ton image personnalisée
-avatarImg.src = '/src/assets/zeynab.jpg';
+avatarImg.src = './zeynab.jpg';
 avatarImg.alt = 'Profil';
 avatarImg.className = 'w-full h-full object-cover';
 profileBtn.appendChild(avatarImg);
