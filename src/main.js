@@ -659,7 +659,7 @@ profileBtn.addEventListener('click', () => {
     return container;
   }
 
-createSettingsList() {
+ createSettingsList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col p-4';
 
@@ -749,67 +749,26 @@ createSettingsList() {
 
     return finalContainer;
 }
-
   createMainContent() {
     const mainContent = document.createElement('div');
-    mainContent.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col items-center justify-center relative';
-
+    mainContent.className = 'flex-1 bg-gradient-to-br from-[#0a1733] via-[#0d1b3d] to-[#111827] h-screen flex flex-col items-center justify-center relative overflow-hidden';
     if (this.currentChat) {
-      // Show chat view with proper styling
-      const chatView = chatManager.createChatView(this.currentChat);
-      mainContent.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col';
-      mainContent.innerHTML = '';
-      
-      // Apply WhatsApp Web chat styling
-      chatView.className = 'flex-1 bg-[#0a1733] h-screen flex flex-col';
-      mainContent.appendChild(chatView);
+        const chatView = chatManager.createChatView(this.currentChat);
+        mainContent.className = 'flex-1 bg-gradient-to-br from-[#0a1733] via-[#0d1b3d] to-[#111827] h-screen flex flex-col';
+        mainContent.innerHTML = '';
+        chatView.className = 'flex-1 bg-gradient-to-br from-[#0a1733]/90 via-[#0d1b3d]/90 to-[#111827]/90 backdrop-blur-xl h-screen flex flex-col border border-white/10 shadow-2xl';
+        mainContent.appendChild(chatView);
     } else {
-      // Show welcome screen
-      const welcomeContainer = document.createElement('div');
-      welcomeContainer.className = 'text-center max-w-md';
-
-      // Illustration
-      const illustration = document.createElement('div');
-      illustration.className = 'mb-8';
-      illustration.innerHTML = `
-        <svg width="320" height="200" viewBox="0 0 320 200" class="opacity-80">
-          <defs>
-            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-              <stop offset="0%" style="stop-color:#00a884;stop-opacity:0.3" />
-              <stop offset="100%" style="stop-color:#00a884;stop-opacity:0.1" />
-            </linearGradient>
-          </defs>
-          <rect x="50" y="40" width="180" height="120" rx="20" fill="url(#grad1)" stroke="#00a884" stroke-width="2"/>
-          <circle cx="280" cy="60" r="25" fill="#00a884" opacity="0.6"/>
-          <rect x="240" y="100" width="60" height="40" rx="10" fill="#00a884" opacity="0.4"/>
-          <path d="M140 80 L140 120 L180 100 Z" fill="#00a884"/>
-        </svg>
-      `;
-
-      const title = document.createElement('h1');
-      title.className = 'text-[#e9edef] text-3xl font-light mb-4';
-      title.textContent = 'WhatsApp Web';
-
-      const description = document.createElement('p');
-      description.className = 'text-[#8696a0] text-sm leading-relaxed mb-8';
-      description.textContent = 'Envoyez et recevez des messages sans avoir à garder votre téléphone connecté. Utilisez WhatsApp sur un maximum de 4 appareils et 1 téléphone, simultanément.';
-
-      welcomeContainer.appendChild(illustration);
-      welcomeContainer.appendChild(title);
-      welcomeContainer.appendChild(description);
-
-      // Footer
-      const footer = document.createElement('div');
-      footer.className = 'absolute bottom-8 flex items-center gap-2 text-[#8696a0] text-xs';
-      footer.innerHTML = '<i class="fas fa-lock"></i> Vos messages personnels sont chiffrés de bout en bout';
-
-      mainContent.appendChild(welcomeContainer);
-      mainContent.appendChild(footer);
+        const welcomeContainer = document.createElement('div');
+        welcomeContainer.className = 'text-center'; 
+        const message = document.createElement('p');
+        message.className = 'text-slate-300 text-lg';
+        message.textContent = 'Ecrire ici votre message ou démarrer une nouvelle discussion';
+        welcomeContainer.appendChild(message);
+        mainContent.appendChild(welcomeContainer);
     }
-
     return mainContent;
-  }
-
+}
   getViewTitle() {
     switch (this.currentView) {
       case 'chats': return 'Discussions';
@@ -822,7 +781,6 @@ createSettingsList() {
       default: return 'Discussions';
     }
   }
-
   showChatView(chat) {
     this.currentChat = chat;
     this.showMainApp();

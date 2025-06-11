@@ -65,9 +65,12 @@ class ApiService {
     return this.request('chats');
   }
 
-  async getChat(id) {
-    return this.request(`chats/${id}`);
-  }
+  async updateChat(id, data) {
+  return this.request(`chats/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(data)
+  });
+}
 
   // Messages
   async getMessages(chatId) {
