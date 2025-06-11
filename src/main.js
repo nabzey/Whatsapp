@@ -130,13 +130,13 @@ class WhatsAppClone {
 
     // Profile avatar
     const currentUser = userManager.getCurrentUser();
-    const profileBtn = document.createElement('button');
-    profileBtn.className = 'w-10 h-10 rounded-full overflow-hidden border-2 border-[#00a884]';
-    profileBtn.title = 'Profil';
-    
-  const avatarImg = document.createElement('img');
-// Toujours utiliser ton image personnalisée
-avatarImg.src = './zeynab.jpg';
+  const profileBtn = document.createElement('button');
+profileBtn.className = 'w-10 h-10 rounded-full overflow-hidden border-2 border-[#00a884]';
+profileBtn.title = 'Profil';
+
+// Toujours utiliser ton image personnalisée du dossier assets
+const avatarImg = document.createElement('img');
+avatarImg.src = '/src/assets/zeynab.jpg'; // Mets ici le chemin relatif depuis "public" ou la racine du projet selon ton serveur
 avatarImg.alt = 'Profil';
 avatarImg.className = 'w-full h-full object-cover';
 profileBtn.appendChild(avatarImg);
@@ -668,7 +668,7 @@ profileBtn.addEventListener('click', () => {
     profileSection.className = 'flex items-center p-4 hover:bg-[#202c33] cursor-pointer rounded-lg mb-4';
 
     const profileAvatar = document.createElement('img');
-    avatarImg.src = './zeynab.jpg';
+    avatarImg.src = '/zeynab.jpg';
     profileAvatar.className = 'w-16 h-16 rounded-full object-cover';
     const profileInfo = document.createElement('div');
     profileInfo.className = 'ml-4 flex-1';
