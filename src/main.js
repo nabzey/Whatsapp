@@ -391,7 +391,7 @@ profileBtn.addEventListener('click', () => {
     return container;
   }
 
-  createStatusList() {
+ createStatusList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col';
 
@@ -406,12 +406,13 @@ profileBtn.addEventListener('click', () => {
     const myStatusItem = document.createElement('div');
     myStatusItem.className = 'flex items-center cursor-pointer hover:bg-[#202c33] p-2 rounded-lg';
 
-    const currentUser = userManager.getCurrentUser();
+    // Toujours utiliser l'image personnalisée du dossier assets
     const myAvatar = document.createElement('div');
     myAvatar.className = 'relative';
 
     const avatarImg = document.createElement('img');
-    avatarImg.src = currentUser?.avatar || 'https://ui-avatars.com/api/?name=User&background=00a884&color=fff';
+    avatarImg.src = '/src/assets/zeynab.jpg';
+    avatarImg.alt = 'Profil';
     avatarImg.className = 'w-12 h-12 rounded-full object-cover';
 
     const addIcon = document.createElement('div');
@@ -518,7 +519,7 @@ profileBtn.addEventListener('click', () => {
     container.appendChild(recentSection);
 
     return container;
-  }
+}
 
   createCallsList() {
     const container = document.createElement('div');
