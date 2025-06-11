@@ -6,6 +6,7 @@ import statusManager from './status.js';
 import callsManager from './calls.js';
 
 
+
 class WhatsAppClone {
   constructor() {
     this.app = document.getElementById('app');
@@ -657,7 +658,7 @@ profileBtn.addEventListener('click', () => {
     return container;
   }
 
-  createSettingsList() {
+createSettingsList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col p-4';
 
@@ -667,9 +668,12 @@ profileBtn.addEventListener('click', () => {
     const profileSection = document.createElement('div');
     profileSection.className = 'flex items-center p-4 hover:bg-[#202c33] cursor-pointer rounded-lg mb-4';
 
+    // Utilise toujours l'image personnalisée du dossier assets
     const profileAvatar = document.createElement('img');
-    avatarImg.src = '/zeynab.jpg';
+    profileAvatar.src = '/src/assets/zeynab.jpg';
+    profileAvatar.alt = 'Profil';
     profileAvatar.className = 'w-16 h-16 rounded-full object-cover';
+
     const profileInfo = document.createElement('div');
     profileInfo.className = 'ml-4 flex-1';
 
@@ -743,7 +747,7 @@ profileBtn.addEventListener('click', () => {
     finalContainer.appendChild(logoutButton);
 
     return finalContainer;
-  }
+}
 
   createMainContent() {
     const mainContent = document.createElement('div');
