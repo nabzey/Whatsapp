@@ -668,9 +668,8 @@ profileBtn.addEventListener('click', () => {
     profileSection.className = 'flex items-center p-4 hover:bg-[#202c33] cursor-pointer rounded-lg mb-4';
 
     const profileAvatar = document.createElement('img');
-    profileAvatar.src = currentUser?.avatar || 'https://ui-avatars.com/api/?name=User&background=00a884&color=fff';
+    avatarImg.src = './zeynab.jpg';
     profileAvatar.className = 'w-16 h-16 rounded-full object-cover';
-
     const profileInfo = document.createElement('div');
     profileInfo.className = 'ml-4 flex-1';
 
