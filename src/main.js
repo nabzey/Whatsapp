@@ -134,17 +134,18 @@ class WhatsAppClone {
     profileBtn.className = 'w-10 h-10 rounded-full overflow-hidden border-2 border-[#00a884]';
     profileBtn.title = 'Profil';
     
-    const avatarImg = document.createElement('img');
-    avatarImg.src = currentUser?.avatar || 'https://ui-avatars.com/api/?name=User&background=00a884&color=fff';
-    avatarImg.alt = 'Profil';
-    avatarImg.className = 'w-full h-full object-cover';
-    profileBtn.appendChild(avatarImg);
-    
-    profileBtn.addEventListener('click', () => {
-      this.currentView = 'profile';
-      this.currentChat = null;
-      this.showMainApp();
-    });
+  const avatarImg = document.createElement('img');
+// Toujours utiliser ton image personnalisée
+avatarImg.src = '/src/assets/zeynab.jpg';
+avatarImg.alt = 'Profil';
+avatarImg.className = 'w-full h-full object-cover';
+profileBtn.appendChild(avatarImg);
+
+profileBtn.addEventListener('click', () => {
+  this.currentView = 'profile';
+  this.currentChat = null;
+  this.showMainApp();
+});
 
     // Logout button
     const logoutBtn = document.createElement('button');

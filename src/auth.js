@@ -77,7 +77,7 @@ class AuthManager {
     const usernameGroup = document.createElement('div');
     const usernameLabel = document.createElement('label');
     usernameLabel.className = 'block text-sm font-medium text-white mb-2';
-    usernameLabel.textContent = 'NOM';
+    usernameLabel.textContent = 'Contact';
     
     const usernameInput = document.createElement('input');
     usernameInput.type = 'text';
