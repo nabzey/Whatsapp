@@ -4,8 +4,9 @@ import userManager from './user.js';
 import chatManager from './chat.js';
 import statusManager from './status.js';
 import callsManager from './calls.js';
-
-
+import { createLeftSidebar } from './leftSidebar.js';
+import { createDiscussionsPanel } from './discussionsPanel.js';
+import { createMainContent } from './mainContent.js';
 
 class WhatsAppClone {
   constructor() {
@@ -57,247 +58,6 @@ class WhatsAppClone {
     this.app.appendChild(loginForm);
   }
 
-  createLeftSidebar() {
-    const sidebar = document.createElement('div');
-    sidebar.className = 'w-16 bg-[#202c33] h-screen flex flex-col justify-between items-center py-4 border-r border-[#3b4a54]';
-
-    // Top icons
-    const topIcons = document.createElement('div');
-    topIcons.className = 'flex flex-col items-center gap-6';
-
-    // Chat icon
-    const chatIcon = document.createElement('button');
-    chatIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'chats' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
-    chatIcon.innerHTML = '<i class="fas fa-comment-alt text-xl"></i>';
-    chatIcon.title = 'Discussions';
-    chatIcon.addEventListener('click', () => {
-      this.currentView = 'chats';
-      this.currentChat = null;
-      this.showMainApp();
-    });
-
-    // Status icon
-    const statusIcon = document.createElement('button');
-    statusIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'status' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
-    statusIcon.innerHTML = '<i class="fas fa-circle-notch text-xl"></i>';
-    statusIcon.title = 'Statuts';
-    statusIcon.addEventListener('click', () => {
-      this.currentView = 'status';
-      this.currentChat = null;
-      this.showMainApp();
-    });
-
-    // Channels icon
-    const channelsIcon = document.createElement('button');
-    channelsIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'channels' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
-    channelsIcon.innerHTML = '<i class="fas fa-bullhorn text-xl"></i>';
-    channelsIcon.title = 'Chaînes';
-    channelsIcon.addEventListener('click', () => {
-      this.currentView = 'channels';
-      this.currentChat = null;
-      this.showMainApp();
-    });
-
-    // Communities icon
-    const communitiesIcon = document.createElement('button');
-    communitiesIcon.className = `p-3 rounded-lg transition-colors ${this.currentView === 'communities' ? 'bg-[#0a1733] text-white' : 'text-[#8696a0] hover:bg-[#1d4ed8]'}`;
-    communitiesIcon.innerHTML = '<i class="fas fa-users text-xl"></i>';
-    communitiesIcon.title = 'Communautés';
-    communitiesIcon.addEventListener('click', () => {
-      this.currentView = 'communities';
-      this.currentChat = null;
-      this.showMainApp();
-    });
-
-    topIcons.appendChild(chatIcon);
-    topIcons.appendChild(statusIcon);
-    topIcons.appendChild(channelsIcon);
-    topIcons.appendChild(communitiesIcon);
-
-    // Bottom icons
-    const bottomIcons = document.createElement('div');
-    bottomIcons.className = 'flex flex-col items-center gap-4';
-
-    // Settings icon
-    const settingsIcon = document.createElement('button');
-    settingsIcon.className = 'text-[#8696a0] hover:bg-[#3b4a54] p-3 rounded-lg transition-colors';
-    settingsIcon.innerHTML = '<i class="fas fa-cog text-xl"></i>';
-    settingsIcon.title = 'Paramètres';
-    settingsIcon.addEventListener('click', () => {
-      this.currentView = 'settings';
-      this.currentChat = null;
-      this.showMainApp();
-    });
-
-    // Profile avatar
-    const currentUser = userManager.getCurrentUser();
-  const profileBtn = document.createElement('button');
-profileBtn.className = 'w-10 h-10 rounded-full overflow-hidden border-2 border-[#00a884]';
-profileBtn.title = 'Profil';
-
-// Toujours utiliser ton image personnalisée du dossier assets
-const avatarImg = document.createElement('img');
-avatarImg.src = '/src/assets/zeynab.jpg'; // Mets ici le chemin relatif depuis "public" ou la racine du projet selon ton serveur
-avatarImg.alt = 'Profil';
-avatarImg.className = 'w-full h-full object-cover';
-profileBtn.appendChild(avatarImg);
-
-profileBtn.addEventListener('click', () => {
-  this.currentView = 'profile';
-  this.currentChat = null;
-  this.showMainApp();
-});
-
-    // Logout button
-    const logoutBtn = document.createElement('button');
-    logoutBtn.className = 'w-10 h-10 flex items-center justify-center rounded-full mt-4 text-[#8696a0] hover:text-red-500 transition-colors';
-    logoutBtn.title = 'Déconnexion';
-    logoutBtn.innerHTML = '<i class="fas fa-sign-out-alt text-xl"></i>';
-    logoutBtn.addEventListener('click', () => {
-      authManager.logout();
-      this.showLoginScreen();
-    });
-
-    bottomIcons.appendChild(settingsIcon);
-    bottomIcons.appendChild(profileBtn);
-    bottomIcons.appendChild(logoutBtn);
-
-    sidebar.appendChild(topIcons);
-    sidebar.appendChild(bottomIcons);
-
-    return sidebar;
-  }
-
-  createDiscussionsPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'w-[400px] bg-[#0a1733] h-screen flex flex-col border-r border-[#3b4a54]';
-
-    // Header
-    const header = document.createElement('div');
-    header.className = 'flex items-center justify-between px-4 py-3 bg-[#202c33]';
-
-    const title = document.createElement('h1');
-    title.className = 'text-white text-xl font-medium';
-    title.textContent = this.getViewTitle();
-
-    const headerActions = document.createElement('div');
-    headerActions.className = 'flex items-center gap-2';
-
-    // New chat button
-    const newChatBtn = document.createElement('button');
-    newChatBtn.className = 'text-[#8696a0] hover:text-white p-2 rounded-full hover:bg-[#3b4a54] transition-colors';
-    newChatBtn.innerHTML = '<i class="fas fa-plus text-lg"></i>';
-    newChatBtn.title = 'Nouvelle discussion';
-    newChatBtn.addEventListener('click', () => {
-      if (this.currentView === 'status') {
-        // Create new status
-        const creator = statusManager.createStoryCreator(async (content, type, backgroundColor) => {
-          await statusManager.createStory(content, type, backgroundColor);
-          this.showMainApp();
-        });
-        document.body.appendChild(creator);
-      }
-    });
-
-    // Menu button
-    const menuBtn = document.createElement('button');
-    menuBtn.className = 'text-[#8696a0] hover:text-white p-2 rounded-full hover:bg-[#3b4a54] transition-colors';
-    menuBtn.innerHTML = '<i class="fas fa-ellipsis-v text-lg"></i>';
-    menuBtn.title = 'Menu';
-
-    headerActions.appendChild(newChatBtn);
-    headerActions.appendChild(menuBtn);
-
-    header.appendChild(title);
-    header.appendChild(headerActions);
-
-    // Search bar
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'px-3 py-2 bg-[#111b21]';
-
-    const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'flex items-center bg-[#202c33] rounded-lg px-3 py-2';
-
-    const searchIcon = document.createElement('i');
-    searchIcon.className = 'fas fa-search text-[#8696a0] mr-3';
-
-    const searchInput = document.createElement('input');
-    searchInput.type = 'text';
-    searchInput.placeholder = 'Rechercher';
-    searchInput.className = 'bg-transparent text-white placeholder-[#8696a0] outline-none flex-1';
-
-    searchWrapper.appendChild(searchIcon);
-    searchWrapper.appendChild(searchInput);
-    searchContainer.appendChild(searchWrapper);
-
-    // Filter tabs (only for chats)
-    let filterTabs = null;
-    if (this.currentView === 'chats') {
-      filterTabs = document.createElement('div');
-      filterTabs.className = 'flex gap-2 px-3 py-2 bg-[#111b21]';
-
-      const filters = ['Toutes', 'Non lues', 'Favoris', 'Groupes'];
-      filters.forEach((filter, index) => {
-        const tab = document.createElement('button');
-        tab.className = `px-3 py-1 rounded-full text-sm transition-colors ${
-          index === 0 
-            ? 'bg-[#0a1733] text-white' 
-            : 'bg-[#202c33] text-[#8696a0] hover:bg-[#1d4ed8]'
-        }`;
-        tab.textContent = filter;
-        filterTabs.appendChild(tab);
-      });
-    }
-
-    // Content area
-    const content = document.createElement('div');
-    content.className = 'flex-1 overflow-y-auto';
-
-    // Connection status (only for chats)
-    if (this.currentView === 'chats') {
-      const connectionStatus = document.createElement('div');
-      connectionStatus.className = 'flex items-center gap-3 px-4 py-3 bg-[#1f2937] border-b border-[#3b4a54]';
-      // Archived chats
-      const archivedChats = document.createElement('div');
-      archivedChats.className = 'flex items-center justify-between px-4 py-3 hover:bg-[#202c33] cursor-pointer border-b border-[#3b4a54]';
-
-      const archivedLeft = document.createElement('div');
-      archivedLeft.className = 'flex items-center gap-3';
-
-      const archiveIcon = document.createElement('div');
-      archiveIcon.className = 'w-10 h-10 bg-[#0a1733] rounded-full flex items-center justify-center';
-      archiveIcon.innerHTML = '<i class="fas fa-archive text-white"></i>';
-
-      const archivedText = document.createElement('span');
-      archivedText.className = 'text-white font-medium';
-      archivedText.textContent = 'Archivées';
-
-      const archivedCount = document.createElement('span');
-      archivedCount.className = 'bg-[#0a1733] text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center';
-      archivedCount.textContent = '1';
-
-      archivedLeft.appendChild(archiveIcon);
-      archivedLeft.appendChild(archivedText);
-
-      archivedChats.appendChild(archivedLeft);
-      archivedChats.appendChild(archivedCount);
-      content.appendChild(archivedChats);
-    }
-
-    // Main content list
-    const mainList = this.createContentList();
-    content.appendChild(mainList);
-
-    panel.appendChild(header);
-    panel.appendChild(searchContainer);
-    if (filterTabs) {
-      panel.appendChild(filterTabs);
-    }
-    panel.appendChild(content);
-
-    return panel;
-  }
-
   createContentList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col';
@@ -317,9 +77,7 @@ profileBtn.addEventListener('click', () => {
         return this.createSettingsList();
       default:
         return this.createChatsList();
-    }
-  }
-
+    } }
   createChatsList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col';
@@ -632,33 +390,6 @@ profileBtn.addEventListener('click', () => {
 
     return container;
   }
-
-  createChannelsList() {
-    const container = document.createElement('div');
-    container.className = 'flex flex-col items-center justify-center h-64 text-[#8696a0]';
-    container.innerHTML = `
-      <i class="fas fa-bullhorn text-4xl mb-4"></i>
-      <p class="text-center mb-4">Aucune chaîne disponible</p>
-      <button class="px-4 py-2 bg-[#00a884] text-white rounded-lg hover:bg-[#00a884]/80 transition-colors">
-        Créer une chaîne
-      </button>
-    `;
-    return container;
-  }
-
-  createCommunitiesList() {
-    const container = document.createElement('div');
-    container.className = 'flex flex-col items-center justify-center h-64 text-[#8696a0]';
-    container.innerHTML = `
-      <i class="fas fa-users text-4xl mb-4"></i>
-      <p class="text-center mb-4">Aucune communauté disponible</p>
-      <button class="px-4 py-2 bg-[#00a884] text-white rounded-lg hover:bg-[#00a884]/80 transition-colors">
-        Créer une communauté
-      </button>
-    `;
-    return container;
-  }
-
  createSettingsList() {
     const container = document.createElement('div');
     container.className = 'flex flex-col p-4';
@@ -749,26 +480,6 @@ profileBtn.addEventListener('click', () => {
 
     return finalContainer;
 }
-  createMainContent() {
-    const mainContent = document.createElement('div');
-    mainContent.className = 'flex-1 bg-gradient-to-br from-[#0a1733] via-[#0d1b3d] to-[#111827] h-screen flex flex-col items-center justify-center relative overflow-hidden';
-    if (this.currentChat) {
-        const chatView = chatManager.createChatView(this.currentChat);
-        mainContent.className = 'flex-1 bg-gradient-to-br from-[#0a1733] via-[#0d1b3d] to-[#111827] h-screen flex flex-col';
-        mainContent.innerHTML = '';
-        chatView.className = 'flex-1 bg-gradient-to-br from-[#0a1733]/90 via-[#0d1b3d]/90 to-[#111827]/90 backdrop-blur-xl h-screen flex flex-col border border-white/10 shadow-2xl';
-        mainContent.appendChild(chatView);
-    } else {
-        const welcomeContainer = document.createElement('div');
-        welcomeContainer.className = 'text-center'; 
-        const message = document.createElement('p');
-        message.className = 'text-slate-300 text-lg';
-        message.textContent = 'Ecrire ici votre message ou démarrer une nouvelle discussion';
-        welcomeContainer.appendChild(message);
-        mainContent.appendChild(welcomeContainer);
-    }
-    return mainContent;
-}
   getViewTitle() {
     switch (this.currentView) {
       case 'chats': return 'Discussions';
@@ -786,20 +497,13 @@ profileBtn.addEventListener('click', () => {
     this.showMainApp();
   }
 
-  showMainApp() {
+ showMainApp() {
     this.app.innerHTML = '';
-    
     const container = document.createElement('div');
     container.className = 'flex h-screen w-full bg-[#0a1733]';
-
-    // Left sidebar with icons
-    const leftSidebar = this.createLeftSidebar();
-    
-    // Discussions panel
-    const discussionsPanel = this.createDiscussionsPanel();
-    
-    // Main content area
-    const mainContent = this.createMainContent();
+    const leftSidebar = createLeftSidebar.call(this);
+    const discussionsPanel = createDiscussionsPanel.call(this);
+    const mainContent = createMainContent.call(this);
 
     container.appendChild(leftSidebar);
     container.appendChild(discussionsPanel);
@@ -809,6 +513,5 @@ profileBtn.addEventListener('click', () => {
   }
 }
 
-// Initialize the app
 const app = new WhatsAppClone();
 app.init();
