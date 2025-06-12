@@ -401,7 +401,7 @@ class WhatsAppClone {
 
     // Utilise toujours l'image personnalisée du dossier assets
     const profileAvatar = document.createElement('img');
-    profileAvatar.src = '/src/assets/zeynab.jpg';
+    profileAvatar.src = 'https://img.freepik.com/photos-gratuite/portrait-jeune-femme-musulmane-portant-hijab-regardant-camera_1157-49747.jpg?ga=GA1.1.187790430.1741859635&semt=ais_hybrid&w=740';
     profileAvatar.alt = 'Profil';
     profileAvatar.className = 'w-16 h-16 rounded-full object-cover';
 
