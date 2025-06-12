@@ -168,7 +168,7 @@ class WhatsAppClone {
     myAvatar.className = 'relative';
 
     const avatarImg = document.createElement('img');
-    avatarImg.src = '/src/assets/zeynab.jpg';
+    avatarImg.src = 'https://img.freepik.com/photos-gratuite/portrait-jeune-femme-musulmane-portant-hijab-regardant-camera_1157-49747.jpg?ga=GA1.1.187790430.1741859635&semt=ais_hybrid&w=740';
     avatarImg.alt = 'Profil';
     avatarImg.className = 'w-12 h-12 rounded-full object-cover';
 
