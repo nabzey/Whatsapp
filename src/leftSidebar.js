@@ -82,7 +82,7 @@ profileBtn.title = 'Profil';
 
 // Toujours utiliser ton image personnalisée du dossier assets
 const avatarImg = document.createElement('img');
-avatarImg.src = 'https://img.freepik.com/photos-gratuite/vue-aerienne-chemin-terre-droit-village-arbres-autour_181624-42849.jpg?ga=GA1.1.187790430.1741859635&semt=ais_hybrid&w=740'; // Mets ici le chemin relatif depuis "public" ou la racine du projet selon ton serveur
+avatarImg.src = 'https://img.freepik.com/photos-gratuite/portrait-jeune-femme-musulmane-portant-hijab-regardant-camera_1157-49747.jpg?ga=GA1.1.187790430.1741859635&semt=ais_hybrid&w=740'; // Mets ici le chemin relatif depuis "public" ou la racine du projet selon ton serveur
 avatarImg.alt = 'Profil';
 avatarImg.className = 'w-full h-full object-cover';
 profileBtn.appendChild(avatarImg);
