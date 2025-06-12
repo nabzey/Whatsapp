@@ -66,7 +66,7 @@ class AuthManager {
     
     const logoText = document.createElement('h1');
     logoText.className = 'text-2xl font-bold text-white';
-    logoText.textContent = 'Bienvenue sur votre application';
+    logoText.textContent = 'Bienvenue sur votre YEWTENG';
     
     logo.appendChild(logoIcon);
     logo.appendChild(logoText);

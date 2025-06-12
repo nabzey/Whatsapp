@@ -7,7 +7,6 @@ import callsManager from './calls.js';
 import { createLeftSidebar } from './leftSidebar.js';
 import { createDiscussionsPanel } from './discussionsPanel.js';
 import { createMainContent } from './mainContent.js';
-
 class WhatsAppClone {
   constructor() {
     this.app = document.getElementById('app');
