@@ -184,7 +184,7 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     userItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
     userItem.innerHTML = `<img src="${user.avatar}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
       <div>
-        <div class="text-white font-medium">${user.name}</div>
+        <div class="text-white font-medium">${user.contact}</div>
         <div class="text-[#8696a0] text-xs">${user.status || ''}</div>
       </div>`;
     // Ajoute ici l'action pour démarrer une discussion si tu veux
