@@ -1,6 +1,5 @@
 import { createElement } from "./component.js";
 
-
 export function contactList() {
   function createInput(placeholder) {
     const input = createElement("input", {

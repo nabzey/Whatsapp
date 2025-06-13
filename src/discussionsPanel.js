@@ -129,10 +129,8 @@ export function createDiscussionsPanel() {
 
     return panel;
 }
-
 function showNewDiscussionPanel(panel, userManager, contactList) {
   panel.innerHTML = ''; // Vide tout le panel
-
   // Header
   const header = document.createElement('div');
   header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
@@ -156,7 +154,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   searchInput.placeholder = 'Rechercher un nom ou un numéro';
   searchInput.className = 'w-full px-3 py-2 rounded bg-[#202c33] text-white placeholder-[#8696a0] outline-none';
   searchContainer.appendChild(searchInput);
-
   // Boutons rapides
   const quickActions = document.createElement('div');
   quickActions.className = 'flex flex-col gap-2 px-4 py-2';
@@ -171,7 +168,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     if (btn.action) b.onclick = btn.action;
     quickActions.appendChild(b);
   });
-
   // Liste des utilisateurs
   const usersTitle = document.createElement('div');
   usersTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
@@ -180,16 +176,55 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   usersList.className = 'flex flex-col gap-1 px-2 pb-4 overflow-y-auto';
   const users = userManager.getUsers();
   users.forEach(user => {
-    const userItem = document.createElement('div');
-    userItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-    userItem.innerHTML = `<img src="${user.avatar}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
-      <div>
-        <div class="text-white font-medium">${user.contact}</div>
-        <div class="text-[#8696a0] text-xs">${user.status || ''}</div>
-      </div>`;
-    // Ajoute ici l'action pour démarrer une discussion si tu veux
-    usersList.appendChild(userItem);
-  });
+  const userItem = document.createElement('div');
+  userItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
+  // Génère les contacts en texte lisible
+  const contacts = user.contacts && user.contacts.length > 0
+    ? user.contacts.map(c => c.value).join(', ')
+    : 'Aucun contact';
+  userItem.innerHTML = `
+    <img src="${user.avatar}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
+    <div>
+      <div class="text-white font-medium">${user.name}</div>
+      <div class="text-[#8696a0] text-xs">${user.contacts}</div>
+    </div>
+  `;
+  usersList.appendChild(userItem);
+});
+
+  const currentUser = userManager.getCurrentUser();
+const allUsers = userManager.getUsers();
+
+let contacts = [];
+if (currentUser && Array.isArray(currentUser.contacts)) {
+  // Si contacts est un tableau d'IDs
+  contacts = allUsers.filter(u => currentUser.contacts.includes(u.id));
+  // Si contacts est déjà un tableau d'objets utilisateurs, utilise simplement : contacts = currentUser.contacts;
+}
+
+contacts.forEach(contact => {
+  const contactItem = document.createElement('div');
+  contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33]';
+
+  contactItem.innerHTML = `
+    <img src="${contact.avatar}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
+    <div class="flex-1">
+      <div class="text-white font-medium">${contact.name}</div>
+      <div class="text-[#8696a0] text-xs">${contact.contact || ''}</div>
+    </div>
+  `;
+
+  // Bouton d'appel
+  const callBtn = document.createElement('a');
+  callBtn.href = `tel:${contact.contact}`;
+  callBtn.title = 'Appeler';
+  callBtn.className = 'text-[#00a884] hover:text-[#01976a] text-xl ml-2';
+  callBtn.innerHTML = '<i class="fas fa-phone"></i>';
+
+  contactItem.appendChild(callBtn);
+  usersList.appendChild(contactItem);
+});
+
   panel.appendChild(header);
   panel.appendChild(searchContainer);
   panel.appendChild(quickActions);
