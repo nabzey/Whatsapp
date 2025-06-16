@@ -1,135 +1,4 @@
-import statusManager from './status.js';
-import { contactList } from './contacts.js';
-import { showNewGroupPanel } from './groupe.js';
-import userManager from './user.js'; // Assure-toi d'importer userManager
-
-export function createDiscussionsPanel() {
-    const panel = document.createElement('div');
-    panel.className = 'w-[400px] bg-[#0a1733] h-screen flex flex-col border-r border-[#3b4a54]';
-    // Header
-    const header = document.createElement('div');
-    header.className = 'flex items-center justify-between px-4 py-3 bg-[#202c33]';
-    const title = document.createElement('h1');
-    title.className = 'text-white text-xl font-medium';
-    title.textContent = this.getViewTitle();
-    const headerActions = document.createElement('div');
-    headerActions.className = 'flex items-center gap-2';
-    // New chat button
-    const newChatBtn = document.createElement('button');
-    newChatBtn.className = 'text-[#8696a0] hover:text-white p-2 rounded-full hover:bg-[#3b4a54] transition-colors';
-    newChatBtn.innerHTML = '<i class="fas fa-plus text-lg"></i>';
-    newChatBtn.title = 'Nouvelle discussion';
-    newChatBtn.addEventListener('click', () => {
-      if (this.currentView === 'status') {
-        // Create new status
-        const creator = statusManager.createStoryCreator(async (content, type, backgroundColor) => {
-          await statusManager.createStory(content, type, backgroundColor);
-          this.showMainApp();
-        });
-        document.body.appendChild(creator);
-      } else if (this.currentView === 'chats') {
-        showNewDiscussionPanel.call(this, panel, userManager, contactList);
-      }
-    });
-
-    // Menu button
-    const menuBtn = document.createElement('button');
-    menuBtn.className = 'text-[#8696a0] hover:text-white p-2 rounded-full hover:bg-[#3b4a54] transition-colors';
-    menuBtn.innerHTML = '<i class="fas fa-ellipsis-v text-lg"></i>';
-    menuBtn.title = 'Menu';
-
-    headerActions.appendChild(newChatBtn);
-    headerActions.appendChild(menuBtn);
-
-    header.appendChild(title);
-    header.appendChild(headerActions);
-
-    // Search bar
-    const searchContainer = document.createElement('div');
-    searchContainer.className = 'px-3 py-2 bg-[#111b21] search-bar-whatsapp'; // Ajoute une classe simple
-
-    const searchWrapper = document.createElement('div');
-    searchWrapper.className = 'flex items-center bg-[#202c33] rounded-lg px-3 py-2';
-
-    const searchIcon = document.createElement('i');
-    searchIcon.className = 'fas fa-search text-[#8696a0] mr-3';
-
-    const searchInput = document.createElement('input');
-    searchInput.type = 'text';
-    searchInput.placeholder = 'Rechercher';
-    searchInput.className = 'bg-transparent text-white placeholder-[#8696a0] outline-none flex-1';
-
-    searchWrapper.appendChild(searchIcon);
-    searchWrapper.appendChild(searchInput);
-    searchContainer.appendChild(searchWrapper);
-
-    // Filter tabs (only for chats)
-    let filterTabs = null;
-    if (this.currentView === 'chats') {
-      filterTabs = document.createElement('div');
-      filterTabs.className = 'flex gap-2 px-3 py-2 bg-[#111b21]';
-
-      const filters = ['Toutes', 'Non lues', 'Favoris', 'Groupes'];
-      filters.forEach((filter, index) => {
-        const tab = document.createElement('button');
-        tab.className = `px-3 py-1 rounded-full text-sm transition-colors ${
-          index === 0 
-            ? 'bg-[#0a1733] text-white' 
-            : 'bg-[#202c33] text-[#8696a0] hover:bg-[#1d4ed8]'
-        }`;
-        tab.textContent = filter;
-        filterTabs.appendChild(tab);
-      });
-    }
-
-    // Content area
-    const content = document.createElement('div');
-    content.className = 'flex-1 overflow-y-auto';
-
-    // Connection status (only for chats)
-    if (this.currentView === 'chats') {
-      const connectionStatus = document.createElement('div');
-      connectionStatus.className = 'flex items-center gap-3 px-4 py-3 bg-[#1f2937] border-b border-[#3b4a54]';
-      // Archived chats
-      const archivedChats = document.createElement('div');
-      archivedChats.className = 'flex items-center justify-between px-4 py-3 hover:bg-[#202c33] cursor-pointer border-b border-[#3b4a54]';
-
-      const archivedLeft = document.createElement('div');
-      archivedLeft.className = 'flex items-center gap-3';
-
-      const archiveIcon = document.createElement('div');
-      archiveIcon.className = 'w-10 h-10 bg-[#0a1733] rounded-full flex items-center justify-center';
-      archiveIcon.innerHTML = '<i class="fas fa-archive text-white"></i>';
-
-      const archivedText = document.createElement('span');
-      archivedText.className = 'text-white font-medium';
-      archivedText.textContent = 'Archivées';
-
-      const archivedCount = document.createElement('span');
-      archivedCount.className = 'bg-[#0a1733] text-white text-xs px-2 py-1 rounded-full min-w-[20px] text-center';
-      archivedCount.textContent = '1';
-
-      archivedLeft.appendChild(archiveIcon);
-      archivedLeft.appendChild(archivedText);
-
-      archivedChats.appendChild(archivedLeft);
-      archivedChats.appendChild(archivedCount);
-      content.appendChild(archivedChats);
-    }
-
-    // Main content list
-    const mainList = this.createContentList();
-    content.appendChild(mainList);
-
-    panel.appendChild(header);
-    panel.appendChild(searchContainer);
-    if (filterTabs) {
-      panel.appendChild(filterTabs);
-    }
-    panel.appendChild(content);
-
-    return panel;
-}
+// filepath: /home/zeynab/Bureau/App-complet/src/discussionsPanel.js
 function showNewDiscussionPanel(panel, userManager, contactList) {
   panel.innerHTML = ''; // Vide tout le panel
 
@@ -306,13 +175,18 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const b = document.createElement('button');
     b.className = 'flex items-center gap-3 bg-[#00a884] text-white px-4 py-2 rounded font-medium hover:bg-[#01976a] transition-colors';
     b.innerHTML = `<i class="fas ${btn.icon}"></i> ${btn.label}`;
-    b.addEventListener('click', () => {
-      showNewGroupPanel.call(this, panel, userManager, contactList);
-    });
+    if (btn.label === 'Nouveau groupe') {
+      b.onclick = () => {
+        // Call the group creation function
+        createNewGroup(panel, userManager);
+      };
+    }
     quickActions.appendChild(b);
   });
 
   quickActions.appendChild(addContactBtn);
+
+  // Génération de la liste des contacts
   const currentUser = userManager.getCurrentUser();
   const contacts = (currentUser && Array.isArray(currentUser.contacts)) ? currentUser.contacts : [];
   const contactsTitle = document.createElement('div');
@@ -369,33 +243,78 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     renderContacts(filtered);
   });
 
- 
-  const groups = (currentUser && Array.isArray(currentUser.groups)) ? currentUser.groups : [];
-
-  if (groups.length > 0) {
-    const groupsTitle = document.createElement('div');
-    groupsTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
-    groupsTitle.textContent = 'Groupes';
-    content.appendChild(groupsTitle);
-    groups.forEach(group => {
-      const groupItem = document.createElement('div');
-      groupItem.className = 'flex items-center gap-3 px-4 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-      groupItem.innerHTML = `
-        <img src="${group.image || 'https://cdn-icons-png.flaticon.com/512/616/616489.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/>
-        <div>
-          <div class="text-white font-medium">${group.name}</div>
-          <div class="text-[#8696a0] text-xs">Groupe (${group.members.length} membres)</div>
-        </div>
-      `;
-      // Ajoute ici un eventListener si tu veux ouvrir la discussion de groupe
-      content.appendChild(groupItem);
-    });
-  }
-
   // Ajout dans le bon ordre
   panel.appendChild(header);
   panel.appendChild(searchContainer);
   panel.appendChild(quickActions);
   panel.appendChild(contactsTitle);
   panel.appendChild(contactsList);
+}
+
+function createNewGroup(panel, userManager) {
+  panel.innerHTML = ''; // Clear the panel
+
+  // Header
+  const header = document.createElement('div');
+  header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
+  const backBtn = document.createElement('button');
+  backBtn.innerHTML = '<i class="fas fa-arrow-left text-xl text-[#00a884]"></i>';
+  backBtn.className = 'mr-2';
+  backBtn.onclick = () => {
+    showNewDiscussionPanel(panel, userManager, contactList);
+  };
+  const title = document.createElement('span');
+  title.className = 'text-white text-lg font-semibold';
+  title.textContent = 'Créer un groupe';
+  header.appendChild(backBtn);
+  header.appendChild(title);
+
+  // Form for group creation
+  const form = document.createElement('form');
+  form.className = 'flex flex-col gap-2 bg-[#202c33] p-4 rounded mt-2';
+
+  const groupNameInput = document.createElement('input');
+  groupNameInput.type = 'text';
+  groupNameInput.placeholder = 'Nom du groupe';
+  groupNameInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
+
+  const membersInput = document.createElement('input');
+  membersInput.type = 'text';
+  membersInput.placeholder = 'Ajouter des membres (contacts séparés par des virgules)';
+  membersInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
+
+  const submitBtn = document.createElement('button');
+  submitBtn.type = 'submit';
+  submitBtn.textContent = 'Créer le groupe';
+  submitBtn.className = 'bg-[#00a884] text-white px-3 py-1 rounded hover:bg-[#01976a]';
+
+  form.appendChild(groupNameInput);
+  form.appendChild(membersInput);
+  form.appendChild(submitBtn);
+
+  form.onsubmit = (e) => {
+    e.preventDefault();
+    const groupName = groupNameInput.value.trim();
+    const members = membersInput.value.split(',').map(m => m.trim()).filter(m => m);
+
+    if (!groupName) {
+      alert("Le nom du groupe est requis.");
+      return;
+    }
+
+    // Logic to create the group
+    const currentUser = userManager.getCurrentUser();
+    if (!currentUser.groups) currentUser.groups = [];
+    currentUser.groups.push({
+      id: Date.now(),
+      name: groupName,
+      members: members,
+      avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
+    });
+    userManager.saveUsers && userManager.saveUsers();
+    showNewDiscussionPanel(panel, userManager, contactList);
+  };
+
+  panel.appendChild(header);
+  panel.appendChild(form);
 }
