@@ -165,10 +165,8 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   addContactBtn.className = 'flex items-center gap-3 bg-[#00a884] text-white px-4 py-2 rounded font-medium hover:bg-[#01976a] transition-colors';
   addContactBtn.innerHTML = `<i class="fas fa-user-plus"></i> Nouveau contact`;
   addContactBtn.onclick = () => {
-    // Empêche d'ouvrir plusieurs formulaires
     addContactBtn.disabled = true;
 
-    // Création du formulaire
     const form = document.createElement('form');
     form.className = 'flex flex-col gap-2 bg-[#202c33] p-4 rounded mt-2';
 
@@ -211,7 +209,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
       addContactBtn.disabled = false;
     };
 
-    // Ajout des champs au formulaire
     form.appendChild(prenomInput);
     form.appendChild(prenomError);
     form.appendChild(nomInput);
@@ -228,7 +225,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
 
     form.onsubmit = (e) => {
       e.preventDefault();
-      // Reset erreurs
       [prenomInput, nomInput, contactInput].forEach(i => i.classList.remove('border-red-500'));
       [prenomError, nomError, contactError].forEach(e => { e.textContent = ""; e.classList.add('hidden'); });
 
@@ -294,12 +290,14 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
         prenom: uniquePrenom,
         name: uniqueNom,
         contact,
-        avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png' // avatar Freepik/Flaticon
+        avatar: 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'
       });
       userManager.saveUsers && userManager.saveUsers();
       showNewDiscussionPanel.call(this, panel, userManager, contactList);
     };
   };
+
+  // Ajoute les autres boutons rapides
   [
     { icon: 'fa-users', label: 'Nouveau groupe' },
     { icon: 'fa-users-cog', label: 'Nouvelle communauté' }
@@ -309,9 +307,10 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     b.innerHTML = `<i class="fas ${btn.icon}"></i> ${btn.label}`;
     quickActions.appendChild(b);
   });
+
   quickActions.appendChild(addContactBtn);
-  panel.appendChild(header);
-  panel.appendChild(searchContainer);
+
+  // Génération de la liste des contacts
   const currentUser = userManager.getCurrentUser();
   const contacts = (currentUser && Array.isArray(currentUser.contacts)) ? currentUser.contacts : [];
   const contactsTitle = document.createElement('div');
@@ -319,6 +318,8 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   contactsTitle.textContent = 'Mes contacts';
   const contactsList = document.createElement('div');
   contactsList.className = 'flex flex-col gap-1 px-2 pb-4 overflow-y-auto';
+
+  // Trie et identification des doublons
   const sortedContacts = [...contacts].sort((a, b) => {
     const nameA = `${a.prenom || ""} ${a.name || ""}`.toLowerCase();
     const nameB = `${b.prenom || ""} ${b.name || ""}`.toLowerCase();
@@ -329,55 +330,47 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const key = `${c.prenom || ""} ${c.name || ""}`.trim().toLowerCase();
     nameCount[key] = (nameCount[key] || 0) + 1;
   });
-  sortedContacts.forEach(contact => {
-    const contactItem = document.createElement('div');
-    contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-    const key = `${contact.prenom || ""} ${contact.name || ""}`.trim().toLowerCase();
-    let displayName = `${contact.prenom || ""} ${contact.name || ""}`.trim();
-    if (nameCount[key] > 1) {
-      displayName += ` (${contact.contact})`;
-    }
-    contactItem.innerHTML = `
-      <img src="${contact.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
-      <div>
-        <div class="text-white font-medium">${displayName}</div>
-        <div class="text-[#8696a0] text-xs">${contact.contact}</div>
-      </div>
-    `;
-    contactsList.appendChild(contactItem);
-  });
+
+  function renderContacts(list) {
+    contactsList.innerHTML = '';
+    list.forEach(contact => {
+      const key = `${contact.prenom || ""} ${contact.name || ""}`.trim().toLowerCase();
+      let displayName = `${contact.prenom || ""} ${contact.name || ""}`.trim();
+      if (nameCount[key] > 1) {
+        displayName += ` (${contact.contact})`;
+      }
+      const contactItem = document.createElement('div');
+      contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
+      contactItem.innerHTML = `
+        <img src="${contact.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
+        <div>
+          <div class="text-white font-medium">${displayName}</div>
+          <div class="text-[#8696a0] text-xs">${contact.contact}</div>
+        </div>
+      `;
+      contactsList.appendChild(contactItem);
+    });
+  }
+
+  renderContacts(sortedContacts);
+
+  // Recherche dynamique
   searchInput.addEventListener('input', function () {
     const value = this.value.trim().toLowerCase();
-    // Vide la liste
-    contactsList.innerHTML = '';
-    // Filtre les contacts selon prénom, nom ou numéro
-    sortedContacts
-      .filter(contact => {
-        const fullName = `${contact.prenom || ""} ${contact.name || ""}`.toLowerCase();
-        return (
-          fullName.includes(value) ||
-          (contact.contact && contact.contact.toLowerCase().includes(value))
-        );
-      })
-      .forEach(contact => {
-        const key = `${contact.prenom || ""} ${contact.name || ""}`.trim().toLowerCase();
-        let displayName = `${contact.prenom || ""} ${contact.name || ""}`.trim();
-        if (nameCount[key] > 1) {
-          displayName += ` (${contact.contact})`;
-        }
-        const contactItem = document.createElement('div');
-        contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-        contactItem.innerHTML = `
-          <img src="${contact.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
-          <div>
-            <div class="text-white font-medium">${displayName}</div>
-            <div class="text-[#8696a0] text-xs">${contact.contact}</div>
-          </div>
-        `;
-        contactsList.appendChild(contactItem);
-      });
+    const filtered = sortedContacts.filter(contact => {
+      const fullName = `${contact.prenom || ""} ${contact.name || ""}`.toLowerCase();
+      return (
+        fullName.includes(value) ||
+        (contact.contact && contact.contact.toLowerCase().includes(value))
+      );
+    });
+    renderContacts(filtered);
   });
 
+  // Ajout dans le bon ordre
+  panel.appendChild(header);
+  panel.appendChild(searchContainer);
+  panel.appendChild(quickActions);
   panel.appendChild(contactsTitle);
   panel.appendChild(contactsList);
 }
