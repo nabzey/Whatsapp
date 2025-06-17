@@ -1,9 +1,5 @@
-// import { contactList } from './contacts.js';
-// import userManager from './user.js'; 
-
 export function showNewGroupPanel(panel, userManager, contactList) {
-  panel.innerHTML = '';
-
+  panel.innerHTML = ''; 
   // Header
   const header = document.createElement('div');
   header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
@@ -18,11 +14,9 @@ export function showNewGroupPanel(panel, userManager, contactList) {
   title.textContent = 'Nouveau groupe';
   header.appendChild(backBtn);
   header.appendChild(title);
-
   // Formulaire de création de groupe
   const form = document.createElement('form');
   form.className = 'flex flex-col gap-3 bg-[#202c33] p-4 rounded mt-4 mx-4';
-
   // Nom du groupe
   const groupNameInput = document.createElement('input');
   groupNameInput.type = 'text';
@@ -30,13 +24,11 @@ export function showNewGroupPanel(panel, userManager, contactList) {
   groupNameInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
   const groupNameError = document.createElement('small');
   groupNameError.className = 'text-red-500 hidden';
-
   // Image du groupe (optionnel)
   const groupImgInput = document.createElement('input');
   groupImgInput.type = 'text';
   groupImgInput.placeholder = "URL de l'image du groupe (optionnel)";
   groupImgInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
-
   // Sélection des admins (au moins 2)
   const adminsLabel = document.createElement('div');
   adminsLabel.className = 'text-white font-medium mt-2';
@@ -60,13 +52,11 @@ export function showNewGroupPanel(panel, userManager, contactList) {
     adminsList.appendChild(wrapper);
     adminCheckboxes.push(checkbox);
   });
-
   // Boutons
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
   submitBtn.textContent = 'Créer le groupe';
   submitBtn.className = 'bg-[#00a884] text-white px-3 py-1 rounded hover:bg-[#01976a]';
-
   const cancelBtn = document.createElement('button');
   cancelBtn.type = 'button';
   cancelBtn.textContent = 'Annuler';
@@ -74,7 +64,6 @@ export function showNewGroupPanel(panel, userManager, contactList) {
   cancelBtn.onclick = () => {
     this.showMainApp();
   };
-
   const btns = document.createElement('div');
   btns.className = 'flex gap-2';
   btns.appendChild(submitBtn);
@@ -113,7 +102,6 @@ export function showNewGroupPanel(panel, userManager, contactList) {
       adminsLabel.classList.remove('text-red-500');
     }
     if (!valid) return;
-
     // Création du groupe (à adapter selon ta structure)
     const newGroup = {
       id: Date.now(),
@@ -129,7 +117,6 @@ export function showNewGroupPanel(panel, userManager, contactList) {
     userManager.saveUsers && userManager.saveUsers();
     this.showMainApp();
   };
-
   // Ajout dans le panel
   panel.appendChild(header);
   panel.appendChild(form);

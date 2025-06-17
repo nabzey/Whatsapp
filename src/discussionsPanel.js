@@ -1,5 +1,5 @@
 import statusManager from './status.js';
-import { contactList } from './contacts.js';
+import { Liste as contactList } from './contacts.js';
 import { showNewGroupPanel } from './groupe.js';
 import userManager from './user.js'; // Assure-toi d'importer userManager
 
@@ -81,11 +81,9 @@ export function createDiscussionsPanel() {
         filterTabs.appendChild(tab);
       });
     }
-
     // Content area
     const content = document.createElement('div');
     content.className = 'flex-1 overflow-y-auto';
-
     // Connection status (only for chats)
     if (this.currentView === 'chats') {
       const connectionStatus = document.createElement('div');
@@ -116,7 +114,6 @@ export function createDiscussionsPanel() {
       archivedChats.appendChild(archivedCount);
       content.appendChild(archivedChats);
     }
-
     // Main content list
     const mainList = this.createContentList();
     content.appendChild(mainList);
@@ -132,7 +129,6 @@ export function createDiscussionsPanel() {
 }
 function showNewDiscussionPanel(panel, userManager, contactList) {
   panel.innerHTML = ''; // Vide tout le panel
-
   // Header
   const header = document.createElement('div');
   header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
@@ -160,8 +156,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   // Boutons rapides
   const quickActions = document.createElement('div');
   quickActions.className = 'flex flex-col gap-2 px-4 py-2';
-
-  // Ajout du bouton "Nouveau contact" avec formulaire
   const addContactBtn = document.createElement('button');
   addContactBtn.className = 'flex items-center gap-3 bg-[#00a884] text-white px-4 py-2 rounded font-medium hover:bg-[#01976a] transition-colors';
   addContactBtn.innerHTML = `<i class="fas fa-user-plus"></i> Nouveau contact`;
@@ -171,7 +165,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const form = document.createElement('form');
     form.className = 'flex flex-col gap-2 bg-[#202c33] p-4 rounded mt-2';
 
-    // Prénom
     const prenomInput = document.createElement('input');
     prenomInput.type = 'text';
     prenomInput.placeholder = 'Prénom';
@@ -179,7 +172,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const prenomError = document.createElement('small');
     prenomError.className = 'text-red-500 hidden';
 
-    // Nom
     const nomInput = document.createElement('input');
     nomInput.type = 'text';
     nomInput.placeholder = 'Nom';
@@ -187,7 +179,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const nomError = document.createElement('small');
     nomError.className = 'text-red-500 hidden';
 
-    // Contact
     const contactInput = document.createElement('input');
     contactInput.type = 'text';
     contactInput.placeholder = 'Contact (chiffres uniquement)';
@@ -195,7 +186,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     const contactError = document.createElement('small');
     contactError.className = 'text-red-500 hidden';
 
-    // Boutons
     const submitBtn = document.createElement('button');
     submitBtn.type = 'submit';
     submitBtn.textContent = 'Ajouter';
@@ -234,7 +224,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
       const nom = nomInput.value.trim();
       const contact = contactInput.value.trim();
 
-      // Validation
       if (!prenom) {
         prenomInput.classList.add('border-red-500');
         prenomError.textContent = "Le prénom est requis.";
@@ -268,7 +257,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
       }
       if (!valid) return;
 
-      // Génère un prénom/nom unique si besoin
       function generateUniquePrenom(prenom, nom) {
         let suffix = 1;
         let uniqueFullName = `${prenom} ${nom}`;
@@ -283,7 +271,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
       }
       const { uniquePrenom, uniqueNom } = generateUniquePrenom(prenom, nom);
 
-      // Ajoute le contact
       const currentUser = userManager.getCurrentUser();
       if (!currentUser.contacts) currentUser.contacts = [];
       currentUser.contacts.push({
@@ -298,7 +285,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     };
   };
 
-  // Ajoute les autres boutons rapides
   [
     { icon: 'fa-users', label: 'Nouveau groupe' },
     { icon: 'fa-users-cog', label: 'Nouvelle communauté' }
@@ -314,14 +300,32 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
 
   quickActions.appendChild(addContactBtn);
   const currentUser = userManager.getCurrentUser();
-  const contacts = (currentUser && Array.isArray(currentUser.contacts)) ? currentUser.contacts : [];
+
+  // 🔥 AJOUT ICI : contacts = fusion entre utilisateurs JSON (sauf soi) + contacts enregistrés
+  const userContacts = (currentUser && Array.isArray(currentUser.contacts)) ? currentUser.contacts : [];
+  const jsonUsers = contactList.filter(u => u.id !== currentUser.id).map(u => ({
+    id: u.id,
+    prenom: u.username,
+    name: u.name,
+    contact: u.contact,
+    avatar: u.avatar,
+  }));
+
+  const uniqueContactsMap = new Map();
+  [...userContacts, ...jsonUsers].forEach(c => {
+    if (!uniqueContactsMap.has(c.contact)) {
+      uniqueContactsMap.set(c.contact, c);
+    }
+  });
+  const contacts = Array.from(uniqueContactsMap.values());
+
   const contactsTitle = document.createElement('div');
   contactsTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
   contactsTitle.textContent = 'Mes contacts';
+
   const contactsList = document.createElement('div');
   contactsList.className = 'flex flex-col gap-1 px-2 pb-4 overflow-y-auto';
 
-  // Trie et identification des doublons
   const sortedContacts = [...contacts].sort((a, b) => {
     const nameA = `${a.prenom || ""} ${a.name || ""}`.toLowerCase();
     const nameB = `${b.prenom || ""} ${b.name || ""}`.toLowerCase();
@@ -356,7 +360,6 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
 
   renderContacts(sortedContacts);
 
-  // Recherche dynamique
   searchInput.addEventListener('input', function () {
     const value = this.value.trim().toLowerCase();
     const filtered = sortedContacts.filter(contact => {
@@ -369,9 +372,7 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
     renderContacts(filtered);
   });
 
- 
   const groups = (currentUser && Array.isArray(currentUser.groups)) ? currentUser.groups : [];
-
   if (groups.length > 0) {
     const groupsTitle = document.createElement('div');
     groupsTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
@@ -387,12 +388,10 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
           <div class="text-[#8696a0] text-xs">Groupe (${group.members.length} membres)</div>
         </div>
       `;
-      // Ajoute ici un eventListener si tu veux ouvrir la discussion de groupe
       content.appendChild(groupItem);
     });
   }
 
-  // Ajout dans le bon ordre
   panel.appendChild(header);
   panel.appendChild(searchContainer);
   panel.appendChild(quickActions);
