@@ -128,7 +128,8 @@ export function createDiscussionsPanel() {
     return panel;
 }
 function showNewDiscussionPanel(panel, userManager, contactList) {
-  panel.innerHTML = ''; // Vide tout le panel
+  panel.innerHTML = '';
+
   // Header
   const header = document.createElement('div');
   header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
@@ -269,6 +270,7 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
         const uniqueNom = uniqueNomParts.join(" ");
         return { uniquePrenom, uniqueNom };
       }
+
       const { uniquePrenom, uniqueNom } = generateUniquePrenom(prenom, nom);
 
       const currentUser = userManager.getCurrentUser();
@@ -300,24 +302,17 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
 
   quickActions.appendChild(addContactBtn);
   const currentUser = userManager.getCurrentUser();
-
-  // 🔥 AJOUT ICI : contacts = fusion entre utilisateurs JSON (sauf soi) + contacts enregistrés
   const userContacts = (currentUser && Array.isArray(currentUser.contacts)) ? currentUser.contacts : [];
-  const jsonUsers = contactList.filter(u => u.id !== currentUser.id).map(u => ({
-    id: u.id,
-    prenom: u.username,
-    name: u.name,
-    contact: u.contact,
-    avatar: u.avatar,
-  }));
 
-  const uniqueContactsMap = new Map();
-  [...userContacts, ...jsonUsers].forEach(c => {
-    if (!uniqueContactsMap.has(c.contact)) {
-      uniqueContactsMap.set(c.contact, c);
-    }
+  const contacts = userContacts.map(c => {
+    const userData = contactList.find(u => u.username === c.username);
+    return {
+      ...c,
+      avatar: c.avatar || (userData && userData.avatar) || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png',
+      contact: userData ? userData.contact : c.contact,
+      status: c.status || (userData && userData.status) || "",
+    };
   });
-  const contacts = Array.from(uniqueContactsMap.values());
 
   const contactsTitle = document.createElement('div');
   contactsTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
@@ -326,71 +321,26 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   const contactsList = document.createElement('div');
   contactsList.className = 'flex flex-col gap-1 px-2 pb-4 overflow-y-auto';
 
-  const sortedContacts = [...contacts].sort((a, b) => {
-    const nameA = `${a.prenom || ""} ${a.name || ""}`.toLowerCase();
-    const nameB = `${b.prenom || ""} ${b.name || ""}`.toLowerCase();
-    return nameA.localeCompare(nameB);
+if (contacts.length === 0) {
+  const emptyMsg = document.createElement('div');
+  emptyMsg.className = 'text-[#8696a0] text-sm px-4 py-2';
+  emptyMsg.textContent = 'Aucun contact trouvé.';
+  contactsList.appendChild(emptyMsg);
+} else {
+  contacts.forEach(contact => {
+    const contactItem = document.createElement('div');
+    contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
+    contactItem.innerHTML = `
+      <img src="${contact.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/>
+      <div>
+        <div class="text-white font-medium">${contact.name || contact.username}</div>
+        <div class="text-[#8696a0] text-xs">${contact.contact || ""}</div>
+      </div>
+    `;
+    contactsList.appendChild(contactItem);
   });
-  const nameCount = {};
-  sortedContacts.forEach(c => {
-    const key = `${c.prenom || ""} ${c.name || ""}`.trim().toLowerCase();
-    nameCount[key] = (nameCount[key] || 0) + 1;
-  });
+}
 
-  function renderContacts(list) {
-    contactsList.innerHTML = '';
-    list.forEach(contact => {
-      const key = `${contact.prenom || ""} ${contact.name || ""}`.trim().toLowerCase();
-      let displayName = `${contact.prenom || ""} ${contact.name || ""}`.trim();
-      if (nameCount[key] > 1) {
-        displayName += ` (${contact.contact})`;
-      }
-      const contactItem = document.createElement('div');
-      contactItem.className = 'flex items-center gap-3 px-2 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-      contactItem.innerHTML = `
-        <img src="${contact.avatar || 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/> 
-        <div>
-          <div class="text-white font-medium">${displayName}</div>
-          <div class="text-[#8696a0] text-xs">${contact.contact}</div>
-        </div>
-      `;
-      contactsList.appendChild(contactItem);
-    });
-  }
-
-  renderContacts(sortedContacts);
-
-  searchInput.addEventListener('input', function () {
-    const value = this.value.trim().toLowerCase();
-    const filtered = sortedContacts.filter(contact => {
-      const fullName = `${contact.prenom || ""} ${contact.name || ""}`.toLowerCase();
-      return (
-        fullName.includes(value) ||
-        (contact.contact && contact.contact.toLowerCase().includes(value))
-      );
-    });
-    renderContacts(filtered);
-  });
-
-  const groups = (currentUser && Array.isArray(currentUser.groups)) ? currentUser.groups : [];
-  if (groups.length > 0) {
-    const groupsTitle = document.createElement('div');
-    groupsTitle.className = 'px-4 pt-4 pb-2 text-[#00a884] font-semibold text-sm';
-    groupsTitle.textContent = 'Groupes';
-    content.appendChild(groupsTitle);
-    groups.forEach(group => {
-      const groupItem = document.createElement('div');
-      groupItem.className = 'flex items-center gap-3 px-4 py-2 rounded hover:bg-[#202c33] cursor-pointer';
-      groupItem.innerHTML = `
-        <img src="${group.image || 'https://cdn-icons-png.flaticon.com/512/616/616489.png'}" class="w-10 h-10 rounded-full object-cover" alt=""/>
-        <div>
-          <div class="text-white font-medium">${group.name}</div>
-          <div class="text-[#8696a0] text-xs">Groupe (${group.members.length} membres)</div>
-        </div>
-      `;
-      content.appendChild(groupItem);
-    });
-  }
 
   panel.appendChild(header);
   panel.appendChild(searchContainer);
@@ -398,3 +348,4 @@ function showNewDiscussionPanel(panel, userManager, contactList) {
   panel.appendChild(contactsTitle);
   panel.appendChild(contactsList);
 }
+

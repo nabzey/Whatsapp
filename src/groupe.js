@@ -1,5 +1,7 @@
+import { Liste } from "./contacts.js"; // si tu utilises Liste pour les contacts
+
 export function showNewGroupPanel(panel, userManager, contactList) {
-  panel.innerHTML = ''; 
+  panel.innerHTML = '';
   // Header
   const header = document.createElement('div');
   header.className = 'flex items-center gap-3 px-4 py-4 bg-[#202c33]';
@@ -14,9 +16,11 @@ export function showNewGroupPanel(panel, userManager, contactList) {
   title.textContent = 'Nouveau groupe';
   header.appendChild(backBtn);
   header.appendChild(title);
+
   // Formulaire de création de groupe
   const form = document.createElement('form');
   form.className = 'flex flex-col gap-3 bg-[#202c33] p-4 rounded mt-4 mx-4';
+
   // Nom du groupe
   const groupNameInput = document.createElement('input');
   groupNameInput.type = 'text';
@@ -24,15 +28,17 @@ export function showNewGroupPanel(panel, userManager, contactList) {
   groupNameInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
   const groupNameError = document.createElement('small');
   groupNameError.className = 'text-red-500 hidden';
+
   // Image du groupe (optionnel)
   const groupImgInput = document.createElement('input');
   groupImgInput.type = 'text';
   groupImgInput.placeholder = "URL de l'image du groupe (optionnel)";
   groupImgInput.className = 'px-2 py-1 rounded bg-[#111b21] text-white placeholder-[#8696a0]';
-  // Sélection des admins (au moins 2)
+
+  // Sélection des admins (1 ou 2)
   const adminsLabel = document.createElement('div');
   adminsLabel.className = 'text-white font-medium mt-2';
-  adminsLabel.textContent = 'Sélectionne au moins 2 admins :';
+  adminsLabel.textContent = 'Sélectionne 1 ou 2 admins :';
 
   const adminsList = document.createElement('div');
   adminsList.className = 'flex flex-col gap-1 max-h-40 overflow-y-auto';
@@ -52,6 +58,7 @@ export function showNewGroupPanel(panel, userManager, contactList) {
     adminsList.appendChild(wrapper);
     adminCheckboxes.push(checkbox);
   });
+
   // Boutons
   const submitBtn = document.createElement('button');
   submitBtn.type = 'submit';
@@ -97,27 +104,41 @@ export function showNewGroupPanel(panel, userManager, contactList) {
       adminsLabel.textContent = 'Sélectionne au moins 1 admin !';
       adminsLabel.classList.add('text-red-500');
       valid = false;
+    } else if (selectedAdmins.length > 2) {
+      adminsLabel.textContent = 'Pas plus de 2 admins !';
+      adminsLabel.classList.add('text-red-500');
+      valid = false;
     } else {
       adminsLabel.textContent = 'Sélectionne 1 ou 2 admins :';
       adminsLabel.classList.remove('text-red-500');
     }
     if (!valid) return;
-    // Création du groupe (à adapter selon ta structure)
+
+    // Création du groupe
     const newGroup = {
       id: Date.now(),
-      name: groupName,
+      nom: groupName,
+      description: "",
       image: groupImg || 'https://cdn-icons-png.flaticon.com/512/616/616489.png',
       admins: selectedAdmins,
-      members: [...selectedAdmins], // Les admins sont aussi membres
+      membres: [...selectedAdmins], // Les admins sont aussi membres
       messages: []
     };
-    // Ajoute le groupe à la liste globale (à adapter selon ton app)
+
     if (!currentUser.groups) currentUser.groups = [];
     currentUser.groups.push(newGroup);
     userManager.saveUsers && userManager.saveUsers();
-    this.showMainApp();
+
+    // Affiche les détails du groupe nouvellement créé
+    showGroupeDetails(newGroup, currentUser.groups, true);
   };
-  // Ajout dans le panel
+
   panel.appendChild(header);
   panel.appendChild(form);
+}
+
+// Ajoute cette fonction dans le même fichier ou importe-la si besoin
+function showGroupeDetails(groupe, groupes, isAdmin) {
+  // ...reprends ici la logique de ton prompt pour afficher/modifier le groupe...
+  // (tu peux copier-coller la fonction showGroupeDetails de ton prompt ici)
 }
